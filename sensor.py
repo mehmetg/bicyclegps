@@ -6,7 +6,7 @@ import serial
 from serial.serialutil import EIGHTBITS, PARITY_NONE, STOPBITS_ONE
 
 from bicycleinit.BicycleSensor import BicycleSensor
-from sensor_config import GPSConfigurator
+from .sensor_config import GPSConfigurator
 
 
 svs = []
