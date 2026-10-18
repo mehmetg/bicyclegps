@@ -6,6 +6,8 @@ import serial
 from serial.serialutil import EIGHTBITS, PARITY_NONE, STOPBITS_ONE
 
 from bicycleinit.BicycleSensor import BicycleSensor
+from sensor_config import GPSConfigurator
+
 
 svs = []
 pdop = None
@@ -50,9 +52,12 @@ def main(bicycleinit: Connection, name: str, args: dict):
   sensor = BicycleSensor(bicycleinit, name, args)
 
   port = args.get('port', '/dev/ttyACM0')
+  configurator = GPSConfigurator(port_device=port)
+  port = configurator.port
 
   try:
-    ser = serial.Serial(port, baudrate=9600, parity=PARITY_NONE, bytesize=EIGHTBITS, stopbits=STOPBITS_ONE, timeout=5.0)
+    sensor.send_msg(f'Opening serial port {configurator.port} for {configurator.device_name}')
+    ser = serial.Serial(configurator.port, baudrate=9600, parity=PARITY_NONE, bytesize=EIGHTBITS, stopbits=STOPBITS_ONE, timeout=5.0)
   except serial.SerialException as e:
     sensor.send_msg(f'Error opening serial port {port}: {e}')
     return
